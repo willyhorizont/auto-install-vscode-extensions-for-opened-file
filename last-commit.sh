@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SD=$(dirname "$(realpath "$0")")
-RD=$(realpath "$SD/..")
+RD=$(realpath "$SD")
 V="0.0.66" # ! DON'T FORGET TO CHANGE VERSION BEFORE RUNNING !!!!
 T=$(date "+%d %b %Y @ %I:%M %p")
 # ! DON'T FORGET TO CHANGE COMMIT MESSAGE BEFORE RUNNING !!!!
