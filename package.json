@@ -1,7 +1,7 @@
 {
     "name": "auto-install-vscode-extensions-for-opened-file",
     "displayName": "Auto Install VSCode Extensions for Opened File",
-    "version": "0.0.53",
+    "version": "0.0.57",
     "publisher": "willyhorizont",
     "icon": "icon.png",
     "author": "willyhorizont.github.io",
@@ -24,10 +24,12 @@
             "properties": {
                 "willyhorizont.github.io/auto-install-vscode-extensions-for-opened-file.language-specific-vscode-extensions": {
                     "type": "array",
-                    "markdownDescription": "Configuration mapping for auto-install-vscode-extensions-for-opened-file.language-specific-vscode-extensions",
+                    "scope": "resource",
+                    "markdownDescription": "Configuration mapping for language extensions. Local repo settings will take priority over global user settings.",
                     "default": [
                         {
-                            "id": ".ps1",
+                            "id": "powershell",
+                            "file_extension": ".ps1",
                             "vscode_extensions": [
                                 "ms-vscode.PowerShell"
                             ]
@@ -37,10 +39,15 @@
                         "type": "object",
                         "required": [
                             "id",
+                            "file_extension",
                             "vscode_extensions"
                         ],
                         "properties": {
                             "id": {
+                                "type": "string",
+                                "description": "The identifier of the file extension"
+                            },
+                            "file_extension": {
                                 "type": "string",
                                 "description": "The file extension including the dot (e.g., .ps1)"
                             },
@@ -56,7 +63,8 @@
                 },
                 "willyhorizont.github.io/auto-install-vscode-extensions-for-opened-file.base-vscode-extensions": {
                     "type": "array",
-                    "markdownDescription": "base vscode extensions / whitelisted / stay installed",
+                    "scope": "resource",
+                    "markdownDescription": "List of core extension IDs that must always remain installed and whitelisted from automatic uninstallation.",
                     "default": [
                         "formulahendry.code-runner"
                     ],
@@ -66,7 +74,8 @@
                 },
                 "willyhorizont.github.io/auto-install-vscode-extensions-for-opened-file.ignored-file-extensions": {
                     "type": "array",
-                    "markdownDescription": "ignored file extension from installing vscode extensions",
+                    "scope": "resource",
+                    "markdownDescription": "File extensions that will be ignored by this automation.",
                     "default": [
                         ".txt"
                     ],

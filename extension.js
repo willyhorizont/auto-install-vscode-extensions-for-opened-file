@@ -1,23 +1,6 @@
 const vscode = require("vscode");
 const { exec } = require("child_process");
 const path = require("path");
-const fs = require("fs");
-
-const c = vscode.workspace.getConfiguration("willyhorizont.github.io/auto-install-vscode-extensions-for-opened-file");
-const lJ = c.get("language-specific-vscode-extensions") || [];
-const bP = c.get("base-vscode-extensions") || [];
-const extsIgnore = c.get("ignored-file-extensions") || [];
-const lExtDict = lJ.reduce((cur, l) => {
-    const cfX = l["file_extension"].toLowerCase();
-    const lExts = l["vscode_extensions"].map((lExt) => lExt.toLowerCase());
-    if (cur[cfX]) {
-        cur[cfX] = [...cur[cfX], ...lExts];
-        return cur;
-    }
-    cur[cfX] = lExts;
-    return cur;
-}, {});
-const bExts = fs.existsSync(bP) ? fs.readFileSync(bP, "utf8").split(/\r?\n/).map((ln) => ln.trim().toLowerCase()).filter((ln) => ln.length > 0) : [];
 
 let lfXs = [];
 
@@ -30,9 +13,29 @@ const runCmd = (cmd) => {
     });
 };
 
+const getDynamicConfig = () => {
+    const c = vscode.workspace.getConfiguration("willyhorizont.github.io/auto-install-vscode-extensions-for-opened-file");
+    const lJ = c.get("language-specific-vscode-extensions") || [];
+    const bExts = (c.get("base-vscode-extensions") || []).map((ext) => ext.toLowerCase());
+    const extsIgnore = (c.get("ignored-file-extensions") || []).map((ext) => ext.toLowerCase());
+    const lExtDict = lJ.reduce((cur, l) => {
+        if (!l["id"] || !l["file_extension"] || !l["vscode_extensions"]) return cur;
+        const cfX = l["file_extension"].toLowerCase();
+        const lExts = l["vscode_extensions"].map((lExt) => lExt.toLowerCase());
+        if (cur[cfX]) {
+            cur[cfX] = [...cur[cfX], ...lExts];
+            return cur;
+        }
+        cur[cfX] = lExts;
+        return cur;
+    }, {});
+    return { lExtDict, bExts, extsIgnore };
+};
+
 module.exports = {
     activate: (context) => {
         (async () => {
+            const { bExts } = getDynamicConfig();
             for (const bExt of bExts) {
                 if (!vscode.extensions.getExtension(bExt)) {
                     await runCmd(`code --install-extension ${bExt} --force`);
@@ -46,6 +49,7 @@ module.exports = {
 
             const cfNm = edt.document.fileName;
             const cfX = path.extname(cfNm).toLowerCase();
+            const { lExtDict, bExts, extsIgnore } = getDynamicConfig();
             if (extsIgnore.includes(cfX)) return;
             const clExts = lExtDict?.[cfX] || [];
 
@@ -64,7 +68,7 @@ module.exports = {
                             const insExt = oExt.toLowerCase();
 
                             if (bExts.includes(insExt)) continue;
-                            if (lfXs.some((lfX) => lExtDict?.[lfX]?.map((lExt) => lExt.toLowerCase()).includes(insExt))) continue;
+                            if (lfXs.some((lfX) => lExtDict?.[lfX]?.includes(insExt))) continue;
 
                             await runCmd(`code --uninstall-extension ${insExt} --force`);
                             vscode.window.showInformationMessage(`Extension ${insExt} uninstalled.`);
