@@ -1,11 +1,22 @@
 const vscode = require("vscode");
 const { exec } = require("child_process");
 const path = require("path");
+const fs = require("fs");
+const os = require("os");
+const https = require("https");
 
 let lfXs = [];
 const processingExtensions = new Set();
-
 let dS = null;
+let globCtx = null;
+
+const getIsVsix = (extS) => {
+    const extSl = extS.toLowerCase();
+    if (extSl.startsWith("http://") || extSl.startsWith("https://")) return true;
+    if (extSl.endsWith(".vsix") || extSl.startsWith("~") || extSl.startsWith(".") || extSl.startsWith("/")) return true;
+    if (/^[a-z]:/i.test(extSl) || extSl.startsWith("\\\\")) return true;
+    return path.isAbsolute(extS);
+};
 
 const runCmd = (cmd) => {
     return new Promise((resolve) => {
@@ -13,6 +24,74 @@ const runCmd = (cmd) => {
             if (err) console.error(`Failed running command: ${cmd}`, err);
             resolve();
         });
+    });
+};
+
+const svInstalledCache = (extId) => {
+    if (globCtx) {
+        const k = extId.toLowerCase();
+        const cacheL = globCtx.globalState.get("installed_vsix_paths", []);
+        if (!cacheL.includes(k)) {
+            cacheL.push(k);
+            globCtx.globalState.update("installed_vsix_paths", cacheL);
+        }
+    }
+};
+
+const installVsix = (vP) => {
+    return new Promise((resolve) => {
+        let rslvdP = vP;
+        if (/%([^%]+)%/g.test(rslvdP)) {
+            rslvdP = rslvdP.replace(/%([^%]+)%/g, (_, envVar) => {
+                return process.env[envVar] || `%${envVar}%`;
+            });
+        }
+        let nvP = rslvdP.replace(/\\/g, "/");
+        if (nvP.startsWith("~")) {
+            const clnSlc = rslvdP.substring(1).replace(/^[\\\/]+/, "");
+            rslvdP = path.join(os.homedir(), clnSlc);
+        } else {
+            rslvdP = path.resolve(rslvdP);
+        }
+        if (fs.existsSync(rslvdP)) {
+            runCmd(`code --install-extension "${rslvdP}" --force`).then(() => {
+                svInstalledCache(vP);
+                resolve();
+            });
+            return;
+        }
+        if (nvP.startsWith("http://") || nvP.startsWith("https://")) {
+            const tempfP = path.join(os.tmpdir(), `temp-ext-${Date.now()}.vsix`);
+            const fS = fs.createWriteStream(tempfP);
+            const dl = (tarUrl) => {
+                https.get(tarUrl, (rsp) => {
+                    if (rsp.statusCode >= 300 && rsp.statusCode < 400 && rsp.headers.location) return dl(rsp.headers.location);
+                    if (rsp.statusCode !== 200) {
+                        console.error(`Failed to download VSIX from ${tarUrl}.`);
+                        fS.close();
+                        if (fs.existsSync(tempfP)) fs.unlinkSync(tempfP);
+                        return resolve();
+                    }
+                    rsp.pipe(fS);
+                    fS.on("finish", async () => {
+                        fS.close();
+                        await runCmd(`code --install-extension "${tempfP}" --force`);
+                        if (fs.existsSync(tempfP)) fs.unlinkSync(tempfP);
+                        svInstalledCache(vP);
+                        resolve();
+                    });
+                }).on("error", (err) => {
+                    console.error("Download stream error:", err);
+                    fS.close();
+                    if (fs.existsSync(tempfP)) fs.unlinkSync(tempfP);
+                    resolve();
+                });
+            };
+            dl(vP);
+        } else {
+            console.error(`Identifier "${vP}" is marked as VSIX target but file does not exist locally.`);
+            resolve();
+        }
     });
 };
 
@@ -35,17 +114,44 @@ const getDynamicConfig = () => {
     return { lExtDict, bExts, extsIgnore };
 };
 
+const isVscExtInstalled = (extId) => {
+    if (getIsVsix(extId)) {
+        if (globCtx) {
+            const cacheL = globCtx.globalState.get("installed_vsix_paths", []);
+            if (cacheL.includes(extId.toLowerCase())) return true;
+        }
+        return false;
+    }
+    return !!vscode.extensions.getExtension(extId);
+};
+
+const rmvInstalledCache = (extId) => {
+    if (globCtx) {
+        const k = extId.toLowerCase();
+        let cacheL = globCtx.globalState.get("installed_vsix_paths", []);
+        if (cacheL.includes(k)) {
+            cacheL = cacheL.filter((item) => item !== k);
+            globCtx.globalState.update("installed_vsix_paths", cacheL);
+        }
+    }
+};
+
 module.exports = {
-    activate: (context) => {
+    activate: (ctx) => {
+        globCtx = ctx;
         (async () => {
             const { bExts } = getDynamicConfig();
             for (const bExt of bExts) {
                 const bExtL = bExt.toLowerCase();
-                if (!vscode.extensions.getExtension(bExtL) && !processingExtensions.has(bExtL)) {
+                if (!isVscExtInstalled(bExtL) && !processingExtensions.has(bExtL)) {
                     processingExtensions.add(bExtL);
-                    await runCmd(`code --install-extension ${bExtL} --force`);
+                    if (getIsVsix(bExtL)) {
+                        await installVsix(bExt);
+                    } else {
+                        await runCmd(`code --install-extension ${bExtL} --force`);
+                    }
                     processingExtensions.delete(bExtL);
-                    vscode.window.showInformationMessage(`Extension ${bExt} installed.`);
+                    vscode.window.showInformationMessage(`Extension ${bExt} processed.`);
                 }
             }
         })();
@@ -84,6 +190,7 @@ module.exports = {
                                 processingExtensions.add(insExt);
 
                                 await runCmd(`code --uninstall-extension ${insExt} --force`);
+                                rmvInstalledCache(oExt);
                                 processingExtensions.delete(insExt);
                                 vscode.window.showInformationMessage(`Extension ${insExt} uninstalled.`);
                             }
@@ -91,18 +198,22 @@ module.exports = {
                     }
 
                     for (const clExt of clExts) {
-                        const insExt = clExt.toLowerCase();
-                        if (!vscode.extensions.getExtension(insExt) && !processingExtensions.has(insExt)) {
-                            processingExtensions.add(insExt);
-                            await runCmd(`code --install-extension ${insExt} --force`);
-                            processingExtensions.delete(insExt);
+                        const clInsExtL = clExt.toLowerCase();
+                        if (!isVscExtInstalled(clInsExtL) && !processingExtensions.has(clInsExtL)) {
+                            processingExtensions.add(clInsExtL);
+                            if (getIsVsix(clInsExtL)) {
+                                await installVsix(clExt);
+                            } else {
+                                await runCmd(`code --install-extension ${clInsExtL} --force`);
+                            }
+                            processingExtensions.delete(clInsExtL);
                             vscode.window.showInformationMessage(`Extension ${clExt} installed.`);
                         }
                     }
                 }
             }, 500);
         });
-        context.subscriptions.push(dsp);
+        ctx.subscriptions.push(dsp);
     },
     deactivate: () => {
         if (dS) clearTimeout(dS);
