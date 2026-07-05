@@ -1,11 +1,9 @@
-V="0.0.64"
+V="0.0.65"
 \. "$HOME/.nvm/nvm.sh"
 npm version "$V" --no-git-tag-version
-cp readme-base.txt README.md
-sed -i "s/VERSION/$V/g" README.md
 git add .
-git commit -m "version $V: small oopsie;"
+git commit -m "version $V: update build name without version;"
 git tag -d "$V" 2>/dev/null
-git tag -a "$V" -m "version $V: small oopsie;"
+git tag -a "$V" -m "version $V: update build name without version;"
 git push origin main -f
 git push origin --tags -f

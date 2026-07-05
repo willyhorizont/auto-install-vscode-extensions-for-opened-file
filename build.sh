@@ -8,4 +8,4 @@ P=$(jq -r '.publisher' "$SD/package.json")
 V=$(jq -r '.version' "$SD/package.json")
 \. "$HOME/.nvm/nvm.sh"
 code --uninstall-extension "$P.$N"
-vsce package --no-dependencies
+vsce package --no-dependencies -o "$P.$N.vsix"
