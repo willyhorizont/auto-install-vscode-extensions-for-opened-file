@@ -1,3 +1,7 @@
+[Last updated: 06 Jul 2026 @ 04:25 AM]
+version 0.0.68:
+update package.json;
+
 [Last updated: 06 Jul 2026 @ 03:50 AM]
 version 0.0.67:
 now this can install vsc extension from marketplace, remote url, and cross-platform local path;

@@ -1,11 +1,15 @@
 {
     "name": "auto-install-vscode-extensions-for-opened-file",
     "displayName": "Auto Install VSCode Extensions for Opened File",
-    "version": "0.0.67",
+    "version": "0.0.68",
     "publisher": "willyhorizont",
     "icon": "icon.png",
-    "author": "willyhorizont.github.io",
-    "description": "Auto install VSCode extensions for opened file",
+    "author": {
+        "email": "willyhorizont@gmail.com",
+        "name": "Willy Horizont",
+        "url": "https://www.willyhorizont.github.io"
+    },
+    "description": "Auto Install VSCode Extensions for Opened File",
     "categories": [
         "Programming Languages",
         "Extension Packs",
@@ -377,5 +381,19 @@
                 }
             }
         }
-    }
+    },
+    "keywords": [
+        "file extension",
+        "auto extension installer",
+        "install extension on tab switch"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/willyhorizont/auto-install-vscode-extensions-for-opened-file.git"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/willyhorizont/auto-install-vscode-extensions-for-opened-file/issues"
+    },
+    "homepage": "https://github.com/willyhorizont/auto-install-vscode-extensions-for-opened-file#readme"
 }

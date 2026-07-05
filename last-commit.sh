@@ -2,13 +2,13 @@
 
 SD=$(dirname "$(realpath "$0")")
 RD=$(realpath "$SD")
-V="0.0.67" # ! DON'T FORGET TO CHANGE VERSION BEFORE RUNNING !!!!
+V="0.0.68" # ! DON'T FORGET TO CHANGE VERSION BEFORE RUNNING !!!!
 T=$(date "+%d %b %Y @ %I:%M %p")
 # ! DON'T FORGET TO CHANGE COMMIT MESSAGE BEFORE RUNNING !!!!
 M="
 [Last updated: $T]
 version $V:
-now this can install vsc extension from marketplace, remote url, and cross-platform local path;
+update package.json;
 "
 M=$(sed -e '/./,$!d' <<< "$M")
 awk -v msg="$M" 'BEGIN {print msg; print ""} {print}' "$RD/changelog.txt" > "$RD/changelog.tmp" && mv "$RD/changelog.tmp" "$RD/changelog.txt"
