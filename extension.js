@@ -5,6 +5,8 @@ const path = require("path");
 let lfXs = [];
 const processingExtensions = new Set();
 
+let dS = null;
+
 const runCmd = (cmd) => {
     return new Promise((resolve) => {
         exec(cmd, (err) => {
@@ -51,51 +53,58 @@ module.exports = {
         let dsp = vscode.window.onDidChangeActiveTextEditor(async (edt) => {
             if (!edt) return;
 
-            const cfNm = edt.document.fileName;
-            const cfX = path.extname(cfNm).toLowerCase();
-            const { lExtDict, bExts, extsIgnore } = getDynamicConfig();
-            if (extsIgnore.includes(cfX)) return;
-            const clExts = lExtDict?.[cfX] || [];
+            if (dS) {
+                clearTimeout(dS);
+            }
 
-            if (clExts.length > 0) {
-                if (lfXs.includes(cfX)) {
-                    lfXs = lfXs.filter((lfX) => lfX !== cfX);
-                }
-                lfXs.push(cfX);
+            dS = setTimeout(async () => {
+                const cfNm = edt.document.fileName;
+                const cfX = path.extname(cfNm).toLowerCase();
+                const { lExtDict, bExts, extsIgnore } = getDynamicConfig();
+                if (extsIgnore.includes(cfX)) return;
+                const clExts = lExtDict?.[cfX] || [];
 
-                if (lfXs.length > 2) {
-                    const ofX = lfXs.shift();
-                    const olExts = lExtDict?.[ofX] || [];
+                if (clExts.length > 0) {
+                    if (lfXs.includes(cfX)) {
+                        lfXs = lfXs.filter((lfX) => lfX !== cfX);
+                    }
+                    lfXs.push(cfX);
 
-                    if (olExts.length > 0) {
-                        for (const oExt of olExts) {
-                            const insExt = oExt.toLowerCase();
+                    if (lfXs.length > 2) {
+                        const ofX = lfXs.shift();
+                        const olExts = lExtDict?.[ofX] || [];
 
-                            if (bExts.includes(insExt)) continue;
-                            if (lfXs.some((lfX) => lExtDict?.[lfX]?.includes(insExt))) continue;
-                            if (processingExtensions.has(insExt)) continue;
+                        if (olExts.length > 0) {
+                            for (const oExt of olExts) {
+                                const insExt = oExt.toLowerCase();
+
+                                if (bExts.includes(insExt)) continue;
+                                if (lfXs.some((lfX) => lExtDict?.[lfX]?.includes(insExt))) continue;
+                                if (processingExtensions.has(insExt)) continue;
+                                processingExtensions.add(insExt);
+
+                                await runCmd(`code --uninstall-extension ${insExt} --force`);
+                                processingExtensions.delete(insExt);
+                                vscode.window.showInformationMessage(`Extension ${insExt} uninstalled.`);
+                            }
+                        }
+                    }
+
+                    for (const clExt of clExts) {
+                        const insExt = clExt.toLowerCase();
+                        if (!vscode.extensions.getExtension(insExt) && !processingExtensions.has(insExt)) {
                             processingExtensions.add(insExt);
-
-                            await runCmd(`code --uninstall-extension ${insExt} --force`);
+                            await runCmd(`code --install-extension ${insExt} --force`);
                             processingExtensions.delete(insExt);
-                            vscode.window.showInformationMessage(`Extension ${insExt} uninstalled.`);
+                            vscode.window.showInformationMessage(`Extension ${clExt} installed.`);
                         }
                     }
                 }
-
-                for (const clExt of clExts) {
-                    const insExt = clExt.toLowerCase();
-                    if (!vscode.extensions.getExtension(insExt) && !processingExtensions.has(insExt)) {
-                        processingExtensions.add(insExt);
-                        await runCmd(`code --install-extension ${insExt} --force`);
-                        processingExtensions.delete(insExt);
-                        vscode.window.showInformationMessage(`Extension ${clExt} installed.`);
-                    }
-                }
-                return;
-            }
+            }, 500);
         });
         context.subscriptions.push(dsp);
     },
-    deactivate: () => undefined
+    deactivate: () => {
+        if (dS) clearTimeout(dS);
+    }
 };
