@@ -1,0 +1,20 @@
+{
+    "name": "language-specific-extensions-installer",
+    "displayName": "Language Specific Extensions Installer",
+    "version": "0.0.50",
+    "publisher": "willyhorizont",
+    "author": "willyhorizont.github.io",
+    "description": "Install extensions for specified file extensions",
+    "categories": [
+        "Programming Languages",
+        "Extension Packs",
+        "Formatters"
+    ],
+    "engines": {
+        "vscode": "^1.60.0"
+    },
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./extension.js"
+}
