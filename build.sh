@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -f "*.vsix"
+rm -f "./*.vsix"
 SD="$(dirname "$(realpath "$0")")"
 RD="$(realpath "$SD")"
 N=$(jq -r '.name' "$SD/package.json")
