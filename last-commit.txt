@@ -1,6 +1,6 @@
 V=$(jq -r '.version' "package.json")
 git add .
-git commit -m "version $V: small improvement;"
-git tag -a "$V" -m "version $V: small improvement;"
+git commit -m "version $V: add debounce signal;"
+git tag -a "$V" -m "version $V: add debounce signal;"
 git push origin main -f
 git push origin --tags -f
