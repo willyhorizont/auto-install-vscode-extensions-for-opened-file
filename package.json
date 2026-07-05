@@ -1,7 +1,7 @@
 {
     "name": "auto-install-vscode-extensions-for-opened-file",
     "displayName": "Auto Install VSCode Extensions for Opened File",
-    "version": "0.0.65",
+    "version": "0.0.66",
     "publisher": "willyhorizont",
     "icon": "icon.png",
     "author": "willyhorizont.github.io",
@@ -28,10 +28,285 @@
                     "markdownDescription": "Configuration mapping for language extensions. Local repo settings will take priority over global user settings.",
                     "default": [
                         {
+                            "id": "javascript-or-typescript",
+                            "file_extension": ".js",
+                            "vscode_extensions": []
+                        },
+                        {
+                            "id": "python",
+                            "file_extension": ".py",
+                            "vscode_extensions": [
+                                "ms-python.vscode-pylance"
+                            ]
+                        },
+                        {
+                            "id": "php",
+                            "file_extension": ".php",
+                            "vscode_extensions": [
+                                "bmewburn.vscode-intelephense-client"
+                            ]
+                        },
+                        {
+                            "id": "go",
+                            "file_extension": ".go",
+                            "vscode_extensions": [
+                                "golang.go"
+                            ]
+                        },
+                        {
+                            "id": "perl",
+                            "file_extension": ".pl",
+                            "vscode_extensions": [
+                                "bscan.perlnavigator"
+                            ]
+                        },
+                        {
+                            "id": "julia",
+                            "file_extension": ".jl",
+                            "vscode_extensions": [
+                                "julialang.language-julia"
+                            ]
+                        },
+                        {
+                            "id": "lua",
+                            "file_extension": ".lua",
+                            "vscode_extensions": [
+                                "sumneko.lua"
+                            ]
+                        },
+                        {
+                            "id": "ruby",
+                            "file_extension": ".rb",
+                            "vscode_extensions": [
+                                "Shopify.ruby-lsp"
+                            ]
+                        },
+                        {
+                            "id": "r",
+                            "file_extension": ".r",
+                            "vscode_extensions": [
+                                "reditorsupport.r",
+                                "reditorsupport.r-syntax"
+                            ]
+                        },
+                        {
+                            "id": "kotlin",
+                            "file_extension": ".kt",
+                            "vscode_extensions": [
+                                "JetBrains.kotlin-server",
+                                "fwcd.kotlin"
+                            ]
+                        },
+                        {
+                            "id": "swift",
+                            "file_extension": ".swift",
+                            "vscode_extensions": [
+                                "swiftlang.swift-vscode"
+                            ]
+                        },
+                        {
+                            "id": "dart",
+                            "file_extension": ".dart",
+                            "vscode_extensions": [
+                                "dart-code.dart-code"
+                            ]
+                        },
+                        {
+                            "id": "visual-basic-dot-net",
+                            "file_extension": ".vb",
+                            "vscode_extensions": [
+                                "dnakode.vbnet-language-support"
+                            ]
+                        },
+                        {
+                            "id": "c-sharp",
+                            "file_extension": ".cs",
+                            "vscode_extensions": [
+                                "ms-dotnettools.csharp"
+                            ]
+                        },
+                        {
+                            "id": "matlab-or-octave",
+                            "file_extension": ".m",
+                            "vscode_extensions": [
+                                "MathWorks.language-matlab"
+                            ]
+                        },
+                        {
+                            "id": "wolfram-language-script",
+                            "file_extension": ".wls",
+                            "vscode_extensions": [
+                                "WolframResearch.wolfram"
+                            ]
+                        },
+                        {
+                            "id": "raku",
+                            "file_extension": ".raku",
+                            "vscode_extensions": [
+                                "bscan.raku-navigator"
+                            ]
+                        },
+                        {
+                            "id": "scala",
+                            "file_extension": ".scala",
+                            "vscode_extensions": [
+                                "scala-lang.scala"
+                            ]
+                        },
+                        {
+                            "id": "java",
+                            "file_extension": ".java",
+                            "vscode_extensions": [
+                                "redhat.java",
+                                "Oracle.oracle-java"
+                            ]
+                        },
+                        {
+                            "id": "nu",
+                            "file_extension": ".nu",
+                            "vscode_extensions": [
+                                "TheNuProjectContributors.vscode-nushell-lang"
+                            ]
+                        },
+                        {
+                            "id": "elvish",
+                            "file_extension": ".elv",
+                            "vscode_extensions": [
+                                "elves.elvish"
+                            ]
+                        },
+                        {
+                            "id": "vim-script",
+                            "file_extension": ".vim",
+                            "vscode_extensions": []
+                        },
+                        {
+                            "id": "rust",
+                            "file_extension": ".rs",
+                            "vscode_extensions": [
+                                "rust-lang.rust-analyzer"
+                            ]
+                        },
+                        {
+                            "id": "nix",
+                            "file_extension": ".nix",
+                            "vscode_extensions": [
+                                "jnoortheen.nix-ide"
+                            ]
+                        },
+                        {
+                            "id": "tcl",
+                            "file_extension": ".tcl",
+                            "vscode_extensions": [
+                                "bitwisecook.tcl-lsp"
+                            ]
+                        },
+                        {
+                            "id": "gdscript",
+                            "file_extension": ".gd",
+                            "vscode_extensions": [
+                                "geequlim.godot-tools",
+                                "EddieDover.gdscript-formatter-linter",
+                                "DoHe.godot-format"
+                            ]
+                        },
+                        {
+                            "id": "typst",
+                            "file_extension": ".typ",
+                            "vscode_extensions": [
+                                "myriad-dreamin.tinymist",
+                                "mathematic.vscode-pdf"
+                            ]
+                        },
+                        {
                             "id": "powershell",
                             "file_extension": ".ps1",
                             "vscode_extensions": [
                                 "ms-vscode.PowerShell"
+                            ]
+                        },
+                        {
+                            "id": "elixir",
+                            "file_extension": ".exs",
+                            "vscode_extensions": [
+                                "JakeBecker.elixir-ls"
+                            ]
+                        },
+                        {
+                            "id": "ocaml",
+                            "file_extension": ".ml",
+                            "vscode_extensions": [
+                                "ocamllabs.ocaml-platform"
+                            ]
+                        },
+                        {
+                            "id": "erlang",
+                            "file_extension": ".erl",
+                            "vscode_extensions": [
+                                "pgourlain.erlang"
+                            ]
+                        },
+                        {
+                            "id": "gleam",
+                            "file_extension": ".gleam",
+                            "vscode_extensions": [
+                                "Gleam.gleam"
+                            ]
+                        },
+                        {
+                            "id": "zig",
+                            "file_extension": ".zig",
+                            "vscode_extensions": [
+                                "ziglang.vscode-zig"
+                            ]
+                        },
+                        {
+                            "id": "nim",
+                            "file_extension": ".nim",
+                            "vscode_extensions": [
+                                "NimLang.nimlang"
+                            ]
+                        },
+                        {
+                            "id": "odin",
+                            "file_extension": ".odin",
+                            "vscode_extensions": [
+                                "DanielGavin.ols"
+                            ]
+                        },
+                        {
+                            "id": "c-plus-plus",
+                            "file_extension": ".cpp",
+                            "vscode_extensions": [
+                                "jeff-hykin.better-cpp-syntax"
+                            ]
+                        },
+                        {
+                            "id": "objective-c",
+                            "file_extension": ".m",
+                            "vscode_extensions": [
+                                "jeff-hykin.better-objc-syntax"
+                            ]
+                        },
+                        {
+                            "id": "smalltalk-dialect-pharo",
+                            "file_extension": ".st",
+                            "vscode_extensions": [
+                                "PleasedSkin.smalltalk"
+                            ]
+                        },
+                        {
+                            "id": "actionscript",
+                            "file_extension": ".as",
+                            "vscode_extensions": [
+                                "bowlerhatllc.vscode-as3mxml"
+                            ]
+                        },
+                        {
+                            "id": "groovy",
+                            "file_extension": ".groovy",
+                            "vscode_extensions": [
+                                "NicolasVuillamy.vscode-groovy-lint"
                             ]
                         }
                     ],
@@ -66,7 +341,26 @@
                     "scope": "resource",
                     "markdownDescription": "List of core extension IDs that must always remain installed and whitelisted from automatic uninstallation.",
                     "default": [
-                        "formulahendry.code-runner"
+                        "ms-vscode.cpptools-themes",
+                        "emmanuelbeziat.vscode-great-icons",
+                        "aaron-bond.better-comments",
+                        "adpyke.codesnap",
+                        "cardinal90.multi-cursor-case-preserve",
+                        "christian-kohler.path-intellisense",
+                        "ecmel.vscode-html-css",
+                        "formulahendry.code-runner",
+                        "pokey.parse-tree",
+                        "AllemandInstable.colorful-comments-refreshed",
+                        "tobermory.es6-string-html",
+                        "zjcompt.es6-string-javascript",
+                        "mechatroner.rainbow-csv",
+                        "naumovs.color-highlight",
+                        "oderwat.indent-rainbow",
+                        "jduponchelle.rainbow-end",
+                        "ritwickdey.liveserver",
+                        "yzhang.markdown-all-in-one",
+                        "zignd.html-css-class-completion",
+                        "mohd-akram.vscode-html-format"
                     ],
                     "items": {
                         "type": "string"
@@ -76,9 +370,7 @@
                     "type": "array",
                     "scope": "resource",
                     "markdownDescription": "File extensions that will be ignored by this automation.",
-                    "default": [
-                        ".txt"
-                    ],
+                    "default": [],
                     "items": {
                         "type": "string"
                     }
