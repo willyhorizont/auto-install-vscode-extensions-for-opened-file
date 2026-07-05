@@ -1,6 +1,10 @@
-V=$(jq -r '.version' "package.json")
+V="2.6.7"
+npm version "$V" --no-git-tag-version
+cp readme-base.txt README.md
+sed -i "s/VERSION/$V/g" README.md
 git add .
-git commit -m "version $V: small oopsie;"
-git tag -a "$V" -m "version $V: small oopsie;"
+git commit -m "version $V: update README;"
+git tag -d "$V" 2>/dev/null
+git tag -a "$V" -m "version $V: update README;"
 git push origin main -f
 git push origin --tags -f
