@@ -1,10 +1,10 @@
 {
-    "name": "language-specific-extensions-installer",
-    "displayName": "Language Specific Extensions Installer",
-    "version": "0.0.50",
+    "name": "auto-install-vscode-extensions-for-opened-file",
+    "displayName": "Auto Install VSCode Extensions for Opened File",
+    "version": "0.0.52",
     "publisher": "willyhorizont",
     "author": "willyhorizont.github.io",
-    "description": "Install extensions for specified file extensions",
+    "description": "Auto install VSCode extensions for opened file",
     "categories": [
         "Programming Languages",
         "Extension Packs",
@@ -16,5 +16,64 @@
     "activationEvents": [
         "onStartupFinished"
     ],
-    "main": "./extension.js"
+    "main": "./extension.js",
+    "contributes": {
+        "configuration": {
+            "title": "Auto Install VSCode Extensions for Opened File",
+            "properties": {
+                "willyhorizont.github.io/auto-install-vscode-extensions-for-opened-file.language-specific-vscode-extensions": {
+                    "type": "array",
+                    "markdownDescription": "Configuration mapping for auto-install-vscode-extensions-for-opened-file.language-specific-vscode-extensions",
+                    "default": [
+                        {
+                            "id": ".ps1",
+                            "vscode_extensions": [
+                                "ms-vscode.PowerShell"
+                            ]
+                        }
+                    ],
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "vscode_extensions"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "description": "The file extension including the dot (e.g., .ps1)"
+                            },
+                            "vscode_extensions": {
+                                "type": "array",
+                                "description": "Array of extension IDs to install",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "willyhorizont.github.io/auto-install-vscode-extensions-for-opened-file.base-vscode-extensions": {
+                    "type": "array",
+                    "markdownDescription": "base vscode extensions / whitelisted / stay installed",
+                    "default": [
+                        "formulahendry.code-runner"
+                    ],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "willyhorizont.github.io/auto-install-vscode-extensions-for-opened-file.ignored-file-extensions": {
+                    "type": "array",
+                    "markdownDescription": "ignored file extension from installing vscode extensions",
+                    "default": [
+                        ".txt"
+                    ],
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
 }

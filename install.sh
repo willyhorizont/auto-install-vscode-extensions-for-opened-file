@@ -9,3 +9,4 @@ V=$(jq -r '.version' "$SD/package.json")
 \. "$HOME/.nvm/nvm.sh"
 code --uninstall-extension "$P.$N"
 vsce package --allow-missing-repository
+code --install-extension "$N@$V.vsix"
