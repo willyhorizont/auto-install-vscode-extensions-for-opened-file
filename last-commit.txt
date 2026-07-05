@@ -1,6 +1,6 @@
 V=$(jq -r '.version' "package.json")
 git add .
-git commit -m "version $V: finish MVP;"
-git tag -a "$V" -m "version $V: finish MVP;"
+git commit -m "version $V: add logo;"
+git tag -a "$V" -m "version $V: add logo;"
 git push origin main -f
 git push origin --tags -f

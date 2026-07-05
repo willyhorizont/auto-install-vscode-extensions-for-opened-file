@@ -1,8 +1,9 @@
 {
     "name": "auto-install-vscode-extensions-for-opened-file",
     "displayName": "Auto Install VSCode Extensions for Opened File",
-    "version": "0.0.52",
+    "version": "0.0.53",
     "publisher": "willyhorizont",
+    "icon": "logo.png",
     "author": "willyhorizont.github.io",
     "description": "Auto install VSCode extensions for opened file",
     "categories": [
