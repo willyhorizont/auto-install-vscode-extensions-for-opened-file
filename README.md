@@ -7,19 +7,19 @@ You can download and install this extension directly using your terminal via `cu
 ### Using `curl`
 ```bash
 # Download the VSIX file
-curl -L -o auto-install-vscode-extensions-for-opened-file.vsix https://github.com/willyhorizont/auto-install-vscode-extensions-for-opened-file/releases/download/willyhorizont.auto-install-vscode-extensions-for-opened-file.vsix
+curl -L -o willyhorizont.auto-install-vscode-extensions-for-opened-file.vsix https://github.com/willyhorizont/auto-install-vscode-extensions-for-opened-file/releases/latest/download/willyhorizont.auto-install-vscode-extensions-for-opened-file.vsix
 
 # Install to VS Code
-code --install-extension auto-install-vscode-extensions-for-opened-file.vsix
+code --install-extension willyhorizont.auto-install-vscode-extensions-for-opened-file.vsix
 ```
 
 ### Using `wget`
 ```bash
 # Download the VSIX file
-wget https://github.com/willyhorizont/auto-install-vscode-extensions-for-opened-file/releases/download/willyhorizont.auto-install-vscode-extensions-for-opened-file.vsix
+wget https://github.com/willyhorizont/auto-install-vscode-extensions-for-opened-file/releases/latest/download/willyhorizont.auto-install-vscode-extensions-for-opened-file.vsix
 
 # Install to VS Code
-code --install-extension auto-install-vscode-extensions-for-opened-file.vsix
+code --install-extension willyhorizont.auto-install-vscode-extensions-for-opened-file.vsix
 ```
 
 ---
